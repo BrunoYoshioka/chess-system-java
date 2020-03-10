@@ -1,14 +1,19 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Position;
+import chess.pieces.King;
+import chess.pieces.Rook;
 
 // Partida do Xadrez ( O coração do sistema xadrez )
 public class ChessMatch {
 
     private Board board; // tem que ter o tabuleiro
 
+    // construtor da partida
     public ChessMatch(){
-        board = new Board(8, 8); // dimensão 8X8 que essa classe será dita
+        board = new Board(8, 8); // criei o tabuleiro dimensão 8X8
+        initialSetup();
     }
 
     // metodo que retorna uma matriz de peças
@@ -25,5 +30,11 @@ public class ChessMatch {
             // dando um DownCasting do ChessPiece
         }
         return mat; // retorna a matriz de peças da partida de xadrez
+    }
+
+    private void initialSetup(){
+        board.placePiece(new Rook(board, Color.WHITE), new Position(2, 1));
+        board.placePiece(new King(board, Color.BLACK), new Position(0, 4));
+        board.placePiece(new King(board, Color.WHITE), new Position(7, 4));
     }
 }
