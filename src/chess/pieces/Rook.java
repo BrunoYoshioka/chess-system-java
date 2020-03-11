@@ -16,4 +16,11 @@ public class Rook extends ChessPiece {
         // convertendo uma torre para string
         return "R";
     }
+
+    @Override
+    public boolean[][] possibleMoves() {
+        // Por enquanto implementei a instancia da matriz com todos falso.
+        boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+        return mat;
+    }
 }

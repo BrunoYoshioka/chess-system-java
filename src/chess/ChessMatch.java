@@ -57,6 +57,9 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)){
             throw new ChessException("There is no piece on source position"); // não existe peça na posição de origem.
         }
+        if (!board.piece(position).isThereAnyPossibleMove()){ // testar se não tiver nenhum movimento possíveis nessa peça
+            throw new ChessException("There is no possible moves for the chosen piece."); // Não existe movimentos possíveis para essa peça
+        }
     }
 
     // Esse método ele vai receber as coordenadas do xadrez
