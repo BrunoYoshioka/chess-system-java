@@ -39,11 +39,25 @@ public class Board {
 
     // método de colocar uma peça numa dada posição
     public void placePiece(Piece piece, Position position){
-        if (thereIsAPiece(position)){
-            throw new BoardException("There is already a piece on position " + position);
+        if (thereIsAPiece(position)){ // Se tiver a peça na posição
+            throw new BoardException("There is already a piece on position " + position); // Já existe uma peça na posição
         }
         pieces[position.getRow()][position.getColumn()] = piece;
         // ter acesso livremente a peça
+    }
+
+    public Piece removePiece(Position position){
+        if (!positionExists(position)){ // Se existe essa posição
+            throw new BoardException("Position not on the board"); // lançar nova BoardException personalizada: Posição fora do quadro
+        }
+        if (piece(position) == null){ // Se a peça na posição for nulo
+            return null; // não tem nenhuma posição, simplesmente retorno nulo
+        }
+        // fazer o procedimento de retirar a peça
+        Piece aux = piece(position);
+        aux.position = null; // peça foi retirada
+        pieces[position.getRow()][position.getColumn()] = null; // Essa matriz de peças na linha será nulo
+        return aux;
     }
 
     // implementando essa método booleano para testar pela linha e coluna
