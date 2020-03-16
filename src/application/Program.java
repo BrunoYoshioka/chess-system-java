@@ -17,7 +17,7 @@ public class Program {
         while (true){
             try {
                 UI.clearScreen(); // Limpar a tela cada vez que volta no while
-                UI.printBoard(chessMatch.getPieces()); // função para imprimir as partidas
+                UI.printMatch(chessMatch); // função para imprimir as partidas
                 System.out.println(); // saltar uma linha
                 System.out.print("Source: "); // Digite a posição de origem
                 ChessPosition source = UI.readChessPosition(scanner); // ler a posição de origem

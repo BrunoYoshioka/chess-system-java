@@ -9,12 +9,24 @@ import chess.pieces.Rook;
 // Partida do Xadrez ( O coração do sistema xadrez )
 public class ChessMatch {
 
+    private int turn;
+    private Color currentPlayer;
     private Board board; // tem que ter o tabuleiro
 
     // construtor da partida
     public ChessMatch(){
         board = new Board(8, 8); // criei o tabuleiro dimensão 8X8
+        turn = 1; // no início da partida ele vale 1
+        currentPlayer = Color.WHITE; // no início da partida, começa com branco que é o padrão do jogo
         initialSetup();
+    }
+
+    public int getTurn(){ // só terá o método get para que não possa ser alterado
+        return turn;
+    }
+
+    public Color getCurrentPlayer(){ // só terá o método get para que não possa ser alterado
+        return currentPlayer;
     }
 
     // metodo que retorna uma matriz de peças
@@ -47,6 +59,7 @@ public class ChessMatch {
         validateSourcePosition(source); // essa operação responsabiliza por validar essa posição de origem, se ela não existir essa operação vai lançar uma excessão
         validateTargetPosition(source, target); // validar posição de destino, recebendo a posição de destino e origem
         Piece capturedPiece = makeMove(source, target); // recebendo a posição de origem e destino
+        nextTurn(); // Trocar o turn
         return (ChessPiece)capturedPiece; // retornar peça capturada
     }
 
@@ -64,6 +77,10 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)){
             throw new ChessException("There is no piece on source position"); // não existe peça na posição de origem.
         }
+        // verificar se o jogador atual não é igual a cor da peça escolhido.
+        if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()){
+            throw new ChessException("The chosen piece is not yours"); // A peça escolhida não é sua
+        }
         if (!board.piece(position).isThereAnyPossibleMove()){ // testar se não tiver nenhum movimento possíveis nessa peça
             throw new ChessException("There is no possible moves for the chosen piece."); // Não existe movimentos possíveis para essa peça
         }
@@ -74,6 +91,13 @@ public class ChessMatch {
         if (!board.piece(source).possibleMove(target)) { // testar se a posição de destino ela é o movimento possível em relação a peça que estiver na posição de origem
             throw new ChessException("The chosen piece can´t move to target position."); // A peça escolhida não pode se mover para posição de destino.
         }
+    }
+
+    // Método que troca o turn
+    private void nextTurn(){
+        turn++; // incrementar turn
+        // mudar o jogador atual
+        currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
     // Esse método ele vai receber as coordenadas do xadrez
