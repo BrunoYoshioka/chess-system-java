@@ -6,12 +6,18 @@ import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Partida do Xadrez ( O coração do sistema xadrez )
 public class ChessMatch {
 
     private int turn;
     private Color currentPlayer;
     private Board board; // tem que ter o tabuleiro
+
+    private List<Piece> piecesOnTheBoard = new ArrayList<>(); // lista de peças no tabuleiro
+    private List<Piece> capturedPieces = new ArrayList<>(); // lista de peças capturadas
 
     // construtor da partida
     public ChessMatch(){
@@ -69,6 +75,12 @@ public class ChessMatch {
         Piece capturedPiece = board.removePiece(target); // remover a possível peça que esteja na posição de destino
         // após remoção de peça que estava na posição de origem e remover a possível peça que esteja na posição de destino
         board.placePiece(piece, target); // Colocar a posição que estava na origem lá na posição de destino
+
+        if (capturedPiece != null) { // capturei uma peça
+            piecesOnTheBoard.remove(capturedPiece); //remover essa peça na lista de peças no tabuleiro
+            capturedPieces.add(capturedPiece); // adicionando essa peça na lista de peças capturadas
+        }
+
         return capturedPiece;
     }
 
@@ -102,7 +114,8 @@ public class ChessMatch {
 
     // Esse método ele vai receber as coordenadas do xadrez
     private void placeNewPiece(char column, int row, ChessPiece piece){
-        board.placePiece(piece, new ChessPosition(column, row).toPosition());
+        board.placePiece(piece, new ChessPosition(column, row).toPosition()); // colocando a peça no tabuleiro
+        piecesOnTheBoard.add(piece); // já coloco a peça na lista de peças no tabuleiro
     }
 
     private void initialSetup(){

@@ -5,7 +5,9 @@ import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Program {
@@ -13,11 +15,12 @@ public class Program {
 
         Scanner scanner = new Scanner(System.in);
         ChessMatch chessMatch = new ChessMatch(); // Instanciar a partida
+        List<ChessPiece> captured = new ArrayList<>(); // Declarei uma lista de peças
 
         while (true){
             try {
                 UI.clearScreen(); // Limpar a tela cada vez que volta no while
-                UI.printMatch(chessMatch); // função para imprimir as partidas
+                UI.printMatch(chessMatch, captured /*Passando o argumento para imprimir partidas*/); // função para imprimir as partidas
                 System.out.println(); // saltar uma linha
                 System.out.print("Source: "); // Digite a posição de origem
                 ChessPosition source = UI.readChessPosition(scanner); // ler a posição de origem
@@ -32,7 +35,11 @@ public class Program {
                 System.out.print("Target: "); // Digite a posição de destino
                 ChessPosition target = UI.readChessPosition(scanner); // ler a posição de destino
 
-                ChessPiece capturedPiece = chessMatch.performChessMove(source, target); // movendo de origem para o destino
+                ChessPiece capturedPiece = chessMatch.performChessMove(source, target); // Efetuar a movimentação de origem para o destino
+
+                if (capturedPiece != null) { // Se alguma peça foi capturada
+                    captured.add(capturedPiece); // adiciono na lista de peças capturadas.
+                }
             }
             catch (ChessException e){
                 System.out.println(e.getMessage());
