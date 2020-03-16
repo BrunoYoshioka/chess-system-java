@@ -44,6 +44,7 @@ public class Board {
         }
         pieces[position.getRow()][position.getColumn()] = piece;
         // ter acesso livremente a peça
+        piece.position = position;
     }
 
     public Piece removePiece(Position position){
