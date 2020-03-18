@@ -17,7 +17,7 @@ public class Program {
         ChessMatch chessMatch = new ChessMatch(); // Instanciar a partida
         List<ChessPiece> captured = new ArrayList<>(); // Declarei uma lista de peças
 
-        while (true){
+        while (!chessMatch.getCheckMate()){ // O programa vai rodar enquanto não estiver em checkmate
             try {
                 UI.clearScreen(); // Limpar a tela cada vez que volta no while
                 UI.printMatch(chessMatch, captured /*Passando o argumento para imprimir partidas*/); // função para imprimir as partidas
@@ -49,6 +49,8 @@ public class Program {
                 System.out.println(e.getMessage());
                 scanner.nextLine();
             }
-        }
+        } // Chegar aqui o Jogo termina (CheckMate)
+        UI.clearScreen();
+        UI.printMatch(chessMatch,captured); // Imprimir a partida finalizada.
     }
 }
