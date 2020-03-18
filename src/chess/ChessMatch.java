@@ -98,10 +98,11 @@ public class ChessMatch {
 
     // Operação makeMove será responsável por realizar o movimento da peça
     private Piece makeMove(Position source, Position target){
-        Piece piece = board.removePiece(source); // retirei a peça que estava na posição de origem
+        ChessPiece piece = (ChessPiece) board.removePiece(source); // retirei a peça que estava na posição de origem, fazendo downcasting para ChessPiece que é do tipo ChessPiece
+        piece.increaseMoveCount(); // quando está em movimento da peça, Incremento a contagem das peças
         Piece capturedPiece = board.removePiece(target); // remover a possível peça que esteja na posição de destino
         // após remoção de peça que estava na posição de origem e remover a possível peça que esteja na posição de destino
-        board.placePiece(piece, target); // Colocar a posição que estava na origem lá na posição de destino
+        board.placePiece(piece /*Repare que foi feito UpCasting*/ , target); // Colocar a posição que estava na origem lá na posição de destino
 
         if (capturedPiece != null) { // capturei uma peça
             piecesOnTheBoard.remove(capturedPiece); //remover essa peça na lista de peças no tabuleiro
@@ -113,8 +114,9 @@ public class ChessMatch {
 
     // Método desfazer o movimento
     private void undoMove(Position source /*posição de origem*/, Position target /*posição de destino*/, Piece capturedPiece /*Possível peça capturada*/){
-        Piece p = board.removePiece(target); // tirar a peça que moveu do destino
-        board.placePiece(p, source); // com a peça tirada, devolver para posição de origem
+        ChessPiece p = (ChessPiece) board.removePiece(target); // tirar a peça que moveu do destino, fazendo downcasting para ChessPiece que é do tipo ChessPiece
+        p.decreaseMoveCount(); // quando está desfazendo o movimento da peça, Decremento a contagem das peças
+        board.placePiece(p /*Repare que foi feito UpCasting*/ , source); // com a peça tirada, devolver para posição de origem
 
         if (capturedPiece != null) { // se a peça tinha sido capturada
             board.placePiece(capturedPiece, target); // voltar a peça capturada para posição de destino

@@ -7,6 +7,7 @@ import boardgame.Position;
 // Peça de Xadrez
 public abstract class ChessPiece extends Piece { // classe abstrata que pode não implementar a operação dos movimentos possíveis
     private Color color;
+    private int moveCount;
 
     public ChessPiece(Board board, Color color) {
         super(board);
@@ -15,6 +16,18 @@ public abstract class ChessPiece extends Piece { // classe abstrata que pode nã
 
     public Color getColor() {
         return color;
+    }
+
+    public int getMoveCount(){
+        return moveCount;
+    }
+
+    public void increaseMoveCount(){
+        moveCount++;
+    }
+
+    public void decreaseMoveCount(){
+        moveCount--;
     }
 
     public ChessPosition getChessPosition(){
