@@ -17,6 +17,11 @@ public abstract class ChessPiece extends Piece { // classe abstrata que pode nã
         return color;
     }
 
+    public ChessPosition getChessPosition(){
+        return ChessPosition.fromPosition(position);
+        // converter position (herdada da classe genérica Piece) para ChessPosition
+    }
+
     // verificar se existe uma peça adversária nessa posição
     protected boolean isThereOpponentPiece(Position position) {
         ChessPiece p = (ChessPiece)getBoard().piece(position); // atribuir a peça que estiver na posição

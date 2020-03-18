@@ -62,6 +62,9 @@ public class UI {
         System.out.println();
         System.out.println("Turn : " + chessMatch.getTurn()); // imprimir o turno
         System.out.println("Waiting player: " + chessMatch.getCurrentPlayer()); // Esperando o jogador atual jogar
+        if (chessMatch.getCheck()){
+            System.out.println("CHECK!");//Acrescentando a informação de check
+        }
     }
 
     public static void printBoard(ChessPiece[][] pieces) {
