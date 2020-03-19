@@ -2,12 +2,17 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class Pawn extends ChessPiece {
-    public Pawn(Board board, Color color) {
+
+    private ChessMatch chessMatch;
+
+    public Pawn(Board board, Color color, ChessMatch chessMatch) {
         super(board, color);
+        this.chessMatch = chessMatch; // Associação
     }
 
     @Override
@@ -45,6 +50,24 @@ public class Pawn extends ChessPiece {
                     isThereOpponentPiece(p) /*E se Tiver uma peça adversária lá*/ ){
                 mat[p.getRow()][p.getColumn()] = true; // marco verdadeiro, indica que essa peça pode mover capturando a peça adversária.
             }
+
+            // #specialmove en passant white
+            if (position.getRow() == 3 /*Para brancas só pode fazer en passant se tiver na linha 5 (que é 3 na matriz)*/ ){
+                Position left /*verificar a esquerda*/ = new Position(position.getRow(), position.getColumn() - 1);
+                if (getBoard().positionExists(left) /*Testando se a posição da esquerda existe*/ &&
+                        isThereOpponentPiece(left) /*Verifica se Tem a peça esquerda do oponente*/ &&
+                        getBoard().piece(left) == chessMatch.getEnPassantVulnerable() /*Se essa peça esta vulnerável a tomar En Passant*/ ){
+                    // O Peao pode capturar a peça da esquerda
+                    mat[left.getRow() - 1][left.getColumn()] = true; // posição possível para o peao mover
+                }
+                Position right /*verificar a direita*/ = new Position(position.getRow(), position.getColumn() + 1);
+                if (getBoard().positionExists(right) /*Testando se a posição da direita existe*/ &&
+                        isThereOpponentPiece(right) /*Verifica se Tem a peça adversária do oponente */ &&
+                        getBoard().piece(right) == chessMatch.getEnPassantVulnerable() /*Se essa peça esta vulnerável a tomar En Passant*/ ){
+                    // O Peao pode capturar a peça da direita
+                    mat[right.getRow() - 1][right.getColumn()] = true; // posição possível para o peao mover
+                }
+            }
         }
         else { // É preto
             p.setValues(position.getRow() + 1, position.getColumn()); // Uma casa abaixo
@@ -71,6 +94,24 @@ public class Pawn extends ChessPiece {
             if (getBoard().positionExists(p) /*Se a posição de uma linha abaixo direita existir*/ &&
                     isThereOpponentPiece(p) /*E se Tiver uma peça adversária lá*/ ){
                 mat[p.getRow()][p.getColumn()] = true; // marco verdadeiro, indica que essa peça pode mover capturando a peça adversária.
+            }
+
+            // #specialmove en passant black
+            if (position.getRow() == 4 /*Para pretas só pode fazer en passant se tiver na linha 4 (que é 4 na matriz)*/ ){
+                Position left /*verificar a esquerda*/ = new Position(position.getRow(), position.getColumn() - 1);
+                if (getBoard().positionExists(left) /*Testando se a posição da esquerda existe*/ &&
+                        isThereOpponentPiece(left) /*Verifica se Tem a peça esquerda do oponente*/ &&
+                        getBoard().piece(left) == chessMatch.getEnPassantVulnerable() /*Se essa peça esta vulnerável a tomar En Passant*/ ){
+                    // O Peao pode capturar a peça da esquerda
+                    mat[left.getRow() + 1][left.getColumn()] = true; // posição possível para o peao mover
+                }
+                Position right /*verificar a direita*/ = new Position(position.getRow(), position.getColumn() + 1);
+                if (getBoard().positionExists(right) /*Testando se a posição da direita existe*/ &&
+                        isThereOpponentPiece(right) /*Verifica se Tem a peça adversária do oponente */ &&
+                        getBoard().piece(right) == chessMatch.getEnPassantVulnerable() /*Se essa peça esta vulnerável a tomar En Passant*/ ){
+                    // O Peao pode capturar a peça da direita
+                    mat[right.getRow() + 1][right.getColumn()] = true; // posição possível para o peao mover
+                }
             }
         }
         return mat;
