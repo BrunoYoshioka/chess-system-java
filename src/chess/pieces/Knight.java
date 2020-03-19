@@ -5,7 +5,7 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-// classe Peça importante Rei
+// classe Peça Cavaleiro
 public class Knight extends ChessPiece {
     // construtor obrigatório a chamada a superclasse que informa o tabuleiro e a cor da peça
     public Knight(Board board, Color color) {

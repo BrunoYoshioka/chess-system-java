@@ -52,7 +52,7 @@ public class Pawn extends ChessPiece {
                 mat[p.getRow()][p.getColumn()] = true; // marco verdadeiro, indica que essa peça pode mover.
             }
             p.setValues(position.getRow() + 2, position.getColumn()); // Duas casas abaixo
-            Position p2 = new Position(position.getRow() - 1, position.getColumn()); // Testar uma casa abaixo se é livre também
+            Position p2 = new Position(position.getRow() + 1, position.getColumn()); // Testar uma casa abaixo se é livre também
             if (getBoard().positionExists(p) /* Se a posição da segunda casa abaixo existir */ &&
                     !getBoard().thereIsAPiece(p) /* Não tiver uma peça na segunda casa abaixo */ &&
                     getBoard().positionExists(p2) /* A posição de uma linha abaixo existir */ &&
