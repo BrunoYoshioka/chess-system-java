@@ -108,6 +108,26 @@ public class ChessMatch {
             capturedPieces.add(capturedPiece); // adicionando essa peça na lista de peças capturadas
         }
 
+        // #specialmove castling kingside rook
+        if (piece instanceof King && /*Se a peça que foi movida for uma instancia de Rei*/
+        target.getColumn() == source.getColumn() + 2 /*A posição de destino for igual a posição de origem + 2 casas a direita*/){
+            Position sourceT = new Position(source.getRow(), source.getColumn() + 3); /*A posição de origem da torre + 3 colunas a direita do Rei*/
+            Position targetT = new Position(source.getRow(), source.getColumn() + 1); /*A posição de origem da torre + 1 colunas a direita do Rei*/
+            ChessPiece rook = (ChessPiece)board.removePiece(sourceT); // Retirar a torre da posição de origem dela
+            board.placePiece(rook, targetT); // colocar essa torre na posição de destino
+            rook.increaseMoveCount(); // como a torre foi movida incremento a quantidade de movimentos dela.
+        }
+
+        // #specialmove castling queenside rook
+        if (piece instanceof King && /*Se a peça que foi movida for uma instancia de Rei*/
+                target.getColumn() == source.getColumn() - 2 /*A posição de destino for igual a posição de origem + 2 casas a esquerda*/){
+            Position sourceT = new Position(source.getRow(), source.getColumn() - 4); /*A posição de origem da torre + 3 colunas a direita do Rei*/
+            Position targetT = new Position(source.getRow(), source.getColumn() - 1); /*A posição de origem da torre + 1 colunas a direita do Rei*/
+            ChessPiece rook = (ChessPiece)board.removePiece(sourceT); // Retirar a torre da posição de origem dela
+            board.placePiece(rook, targetT); // colocar essa torre na posição de destino
+            rook.increaseMoveCount(); // como a torre foi movida incremento a quantidade de movimentos dela.
+        }
+
         return capturedPiece;
     }
 
@@ -121,6 +141,27 @@ public class ChessMatch {
             board.placePiece(capturedPiece, target); // voltar a peça capturada para posição de destino
             capturedPieces.remove(capturedPiece); // tirar a peça da lista de peças capturadas, e colocar novamente na lista de peças no tabuleiro
             piecesOnTheBoard.add(capturedPiece); // Adicionar essa peça na lista de peças no tabuleiro
+        }
+
+        // Desfazendo movimento do Roque da direita
+        // #specialmove castling kingside rook
+        if (p instanceof King && /*Se a peça que foi movida for uma instancia de Rei*/
+                target.getColumn() == source.getColumn() + 2 /*A posição de destino for igual a posição de origem + 2 casas a direita*/){
+            Position sourceT = new Position(source.getRow(), source.getColumn() + 3); /*A posição de origem da torre + 3 colunas a direita do Rei*/
+            Position targetT = new Position(source.getRow(), source.getColumn() + 1); /*A posição de origem da torre + 1 colunas a direita do Rei*/
+            ChessPiece rook = (ChessPiece)board.removePiece(targetT); // Retirar a torre da posição de destino dela
+            board.placePiece(rook, sourceT); // devolver essa torre na posição de origem
+            rook.decreaseMoveCount(); // decremento a quantidade de movimentos dela.
+        }
+
+        // #specialmove castling queenside rook
+        if (p instanceof King && /*Se a peça que foi movida for uma instancia de Rei*/
+                target.getColumn() == source.getColumn() - 2 /*A posição de destino for igual a posição de origem + 2 casas a esquerda*/){
+            Position sourceT = new Position(source.getRow(), source.getColumn() - 4); /*A posição de origem da torre + 3 colunas a direita do Rei*/
+            Position targetT = new Position(source.getRow(), source.getColumn() - 1); /*A posição de origem da torre + 1 colunas a direita do Rei*/
+            ChessPiece rook = (ChessPiece)board.removePiece(targetT); // Retirar a torre da posição de destino dela
+            board.placePiece(rook, sourceT); // devolver essa torre na posição de destino
+            rook.decreaseMoveCount(); // como a torre foi movida incremento a quantidade de movimentos dela.
         }
         // desfez a jogada
     }
@@ -231,7 +272,7 @@ public class ChessMatch {
         placeNewPiece('b', 1, new Knight(board, Color.WHITE));
         placeNewPiece('c', 1, new Bishop(board, Color.WHITE));
         placeNewPiece('d', 1, new Queen(board, Color.WHITE));
-        placeNewPiece('e', 1, new King(board, Color.WHITE));
+        placeNewPiece('e', 1, new King(board, Color.WHITE, this /*Passar a partida na hora de instanciar o rei, uso de Auto-referência*/));
         placeNewPiece('f', 1, new Bishop(board, Color.WHITE));
         placeNewPiece('g', 1, new Knight(board, Color.WHITE));
         placeNewPiece('h', 1, new Rook(board, Color.WHITE));
@@ -248,7 +289,7 @@ public class ChessMatch {
         placeNewPiece('b', 8, new Knight(board, Color.BLACK));
         placeNewPiece('c', 8, new Bishop(board, Color.BLACK));
         placeNewPiece('d', 8, new Queen(board, Color.BLACK));
-        placeNewPiece('e', 8, new King(board, Color.BLACK));
+        placeNewPiece('e', 8, new King(board, Color.BLACK, this /*Auto-referência*/));
         placeNewPiece('f', 8, new Bishop(board, Color.BLACK));
         placeNewPiece('g', 8, new Knight(board, Color.BLACK));
         placeNewPiece('h', 8, new Rook(board, Color.BLACK));
