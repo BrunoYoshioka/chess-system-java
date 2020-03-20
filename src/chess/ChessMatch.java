@@ -5,6 +5,7 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.pieces.*;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class ChessMatch {
     private boolean check; // dizer se está em check
     private boolean checkMate;
     private ChessPiece enPassantVulnerable;
+    private ChessPiece promoted; // propriedade para promoção (Torre, Bispo, cavaleiro e Rainha) quando a peça peao chegar no fim do tabuleiro
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>(); // lista de peças no tabuleiro
     private List<Piece> capturedPieces = new ArrayList<>(); // lista de peças capturadas
@@ -49,6 +51,10 @@ public class ChessMatch {
 
     public ChessPiece getEnPassantVulnerable(){
         return enPassantVulnerable;
+    }
+
+    public ChessPiece getPromoted(){
+        return promoted;
     }
 
     // metodo que retorna uma matriz de peças
@@ -90,6 +96,18 @@ public class ChessMatch {
 
         ChessPiece movedPiece = (ChessPiece)board.piece(target); // Uma referencia para que a peça que se moveu foi para o destino
 
+        // #specialmove promotion
+        // Testar a promoção
+        // Deve ser testado antes do check, pois, quando o peao chega no final deverá receber a promoção (Torre, Bispo, cavaleiro e Rainha), o adversário pode ficar em check
+        promoted = null; // assegurar que estou fazendo novo teste
+        if (movedPiece instanceof Pawn) /*Se a peça movida foi um peao*/{
+            if ((movedPiece.getColor() == Color.WHITE && target.getRow() == 0) /*A Peça Branca chegou no final*/ ||
+            movedPiece.getColor() == Color.BLACK && target.getRow() == 7/*A Peça Preta chegou no final*/) {
+                promoted = (ChessPiece)board.piece(target); // A peça promovida foi o peao que chegou no final
+                promoted = replacePromotedPiece("Q"); // Trocar o peao por uma peça mais poderosa
+            }
+        }
+
         //testar se o oponente ficou em check
         check = (testCheck/*Se o testCheck*/(opponent/*do oponente*/(currentPlayer/*Jogador atual*/))) ? true /*minha partida está em check*/ : false;
 
@@ -112,6 +130,29 @@ public class ChessMatch {
         }
 
         return (ChessPiece)capturedPiece; // retornar peça capturada
+    }
+
+    public ChessPiece replacePromotedPiece(String type /*Tipo da peça*/ ){
+        if (promoted == null) throw new IllegalStateException("There is no piece to be promoted."); // Não há peça para ser promovida
+        if (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) throw new InvalidParameterException("Invalid type for promotion.");
+
+        Position position = promoted.getChessPosition().toPosition();
+        Piece piece = board.removePiece(position);
+        piecesOnTheBoard.remove(piece); // Excluir a peça na lista de peças no tabuleiro
+
+        ChessPiece newPiece = newPiece(type, promoted.getColor()); // Instanciar a nova peça promovida
+        board.placePiece(newPiece, position); // Colocar a nova peça na posição peça promovida
+        piecesOnTheBoard.add(newPiece);
+
+        return newPiece;
+    }
+
+    // Método auxiliar para instanciar a peça específica por promover
+    private ChessPiece newPiece(String type, Color color){
+        if (type.equals("B")) return new Bishop(board, color);
+        if (type.equals("N")) return new Knight(board, color);
+        if (type.equals("Q")) return new Queen(board, color);
+        return new Rook(board, color);
     }
 
     // Operação makeMove será responsável por realizar o movimento da peça
